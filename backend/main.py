@@ -1,18 +1,23 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-
-@app.get("/")
-def root():
-    return {"message": "OBD backend is running"}
-
-
-@app.get("/api/data")
-def get_data():
-    return {"speed": 0, "rpm": 0, "coolant_temp": 0}
+# Laat de frontend verbinding maken
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/api/vehicle")
-def get_vehicle_info():
-    return {"speed": 72, "rpm": 2150, "coolantTemperature": 87, "batteryVoltage": 12.4}
+def get_vehicle():
+    return {
+        "speed": 72,
+        "rpm": 2150,
+        "coolantTemperature": 87,
+        "throttlePosition": 34.5,
+    }
