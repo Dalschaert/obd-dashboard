@@ -1,9 +1,20 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from services.simulation import simulator_loop, get_simulated_vehicle_data
+from models.vehicle import VehicleData
+from contextlib import asynccontextmanager
+import asyncio
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    task = asyncio.create_task(simulator_loop())
 
-# Laat de frontend verbinding maken
+    yield
+
+    task.cancel()
+
+app = FastAPI(lifespan=lifespan)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -12,12 +23,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/api/vehicle-simulation", response_model=VehicleData)
+def get_vehicle_simulation():
+    return get_simulated_vehicle_data()
 
-@app.get("/api/vehicle")
-def get_vehicle():
-    return {
-        "speed": 72,
-        "rpm": 2150,
-        "coolantTemperature": 87,
-        "throttlePosition": 34.5,
-    }
+
+@app.get("/api/vehicle-data", response_model=VehicleData)
+def get_vehicle_data():
+    # later vervangen door echte OBD data
+    return get_simulated_vehicle_data()
+
+
+
+

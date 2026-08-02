@@ -12,7 +12,17 @@ npm run dev
 
 ## Backend
 
-Om de backend op te starten:
+Om de backend op te starten op macOS:
+
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+Als je op Windows werkt, gebruik dan:
 
 ```bash
 cd backend

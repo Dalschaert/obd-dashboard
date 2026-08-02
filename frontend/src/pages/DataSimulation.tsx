@@ -7,17 +7,29 @@ function DataSimulation() {
     const [vehicleData, setVehicleData] = useState<VehicleData | null>(null);
 
     useEffect(() => {
+
         async function loadData() {
             const data = await getVehicleData();
             setVehicleData(data);
         }
 
         loadData();
+
+        // daarna elke 500ms vernieuwen
+        const interval = setInterval(() => {
+            loadData();
+        }, 500);
+
+
+        return () => clearInterval(interval);
+
     }, []);
+
 
     if (!vehicleData) {
         return <p>Loading...</p>;
     }
+
 
     return (
         <div>
@@ -26,7 +38,7 @@ function DataSimulation() {
             <p>Speed: {vehicleData.speed} km/h</p>
             <p>RPM: {vehicleData.rpm}</p>
             <p>Coolant: {vehicleData.coolantTemperature} °C</p>
-            <p>Throttle: {vehicleData.throttlePosition} %</p>
+            <p>Engine Load: {vehicleData.engineLoad} %</p>
         </div>
     );
 }
