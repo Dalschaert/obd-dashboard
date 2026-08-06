@@ -5,6 +5,7 @@ from models.vehicle import VehicleData
 from contextlib import asynccontextmanager
 import asyncio
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     task = asyncio.create_task(simulator_loop())
@@ -12,6 +13,7 @@ async def lifespan(app: FastAPI):
     yield
 
     task.cancel()
+
 
 app = FastAPI(lifespan=lifespan)
 
@@ -23,6 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/api/vehicle-simulation", response_model=VehicleData)
 def get_vehicle_simulation():
     return get_simulated_vehicle_data()
@@ -32,7 +35,3 @@ def get_vehicle_simulation():
 def get_vehicle_data():
     # later vervangen door echte OBD data
     return get_simulated_vehicle_data()
-
-
-
-
