@@ -11,7 +11,7 @@ function Header() {
                     Dashboard
                 </NavLink>
                 <NavLink to="/simulation">
-                    Simulatie
+                    Simulation
                 </NavLink>
             </nav>
         </header>

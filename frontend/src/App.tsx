@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
-import Dashboard from "./pages/Dashboard";
-import DataSimulation from "./pages/DataSimulation";
-import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import DataSimulation from "./pages/Simulation/DataSimulation";
+import Home from "./pages/Home/Home";
 import "./App.css";
 
 function App() {

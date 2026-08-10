@@ -15,8 +15,8 @@ async def simulator_loop():
 
     while True:
 
-        speed += random.uniform(-2, 2)
-        rpm += random.uniform(-100, 100)
+        speed += random.uniform(-5, 5)
+        rpm += random.uniform(-500, 500)
 
         current_vehicle_data = VehicleData(
             speed=round(speed, 1),
@@ -26,7 +26,8 @@ async def simulator_loop():
             intakePressure=random.randint(90, 110),
             intakeTemperature=random.randint(20, 40),
             maf=random.uniform(5, 20),
-            voltage=random.uniform(13.8, 14.5),
+            controlModuleVoltage=random.uniform(13.8, 14.5),
+            ambientTemperature=random.randint(15, 30),
             timestamp=time.time(),
         )
 

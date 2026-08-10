@@ -11,7 +11,8 @@ class VehicleData(BaseModel):
     intakePressure: float
     intakeTemperature: float
     maf: float
-    voltage: float
+    controlModuleVoltage: float
+    ambientTemperature: float
 
     # Optionele gegevens (niet elke auto ondersteunt deze)
     throttlePosition: Optional[float] = None
@@ -22,7 +23,6 @@ class VehicleData(BaseModel):
     fuelRate: Optional[float] = None
     fuelRailPressure: Optional[float] = None
 
-    ambientAirTemperature: Optional[float] = None
     barometricPressure: Optional[float] = None
 
     engineRunTime: Optional[float] = None
