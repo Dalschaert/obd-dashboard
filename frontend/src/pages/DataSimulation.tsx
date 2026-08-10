@@ -33,7 +33,7 @@ function DataSimulation() {
 
     return (
         <div>
-            <h1>Vehicle Dashboard</h1>
+            <h1>Simulation</h1>
 
             <p>Speed: {vehicleData.speed} km/h</p>
             <p>RPM: {vehicleData.rpm}</p>

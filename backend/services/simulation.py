@@ -31,10 +31,10 @@ async def simulator_loop():
         )
 
         if current_vehicle_data.speed < 0 or current_vehicle_data.speed > 200:
-            current_vehicle_data.speed = 50
+            speed = 50
 
         if current_vehicle_data.rpm < 0 or current_vehicle_data.rpm > 10000:
-            current_vehicle_data.rpm = 2000
+            rpm = 2000
 
         # elke 200ms nieuwe data
         await asyncio.sleep(0.1)
