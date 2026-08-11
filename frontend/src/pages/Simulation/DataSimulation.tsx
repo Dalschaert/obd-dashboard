@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { VehicleData } from "../../types/vehicle";
-import { getVehicleData } from "../../services/api";
+import { getVehicleSimulation } from "../../services/api";
 import StandardInfoCard from "../../components/StandardInfoCard";
 import "./DataSimulation.css";
 import GraphInfoCard from "../../components/GraphInfoCard";
@@ -13,7 +13,7 @@ function DataSimulation() {
     useEffect(() => {
 
         async function loadData() {
-            const data = await getVehicleData();
+            const data = await getVehicleSimulation();
             setVehicleData(data);
         }
 
@@ -39,7 +39,7 @@ function DataSimulation() {
     const displayEntries = allEntries.filter(([key]) => key !== "speed" && key !== "rpm" && key !== "engineLoad");
 
     return (
-        <div>
+        <div className="data-simulation-container">
             <div className="info-card-grid-container">
                 <GraphInfoCard VehicleData={{ title: "Speed", value: vehicleData.speed }} />
                 <GraphInfoCard VehicleData={{ title: "RPM", value: vehicleData.rpm }} />

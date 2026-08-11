@@ -1,0 +1,15 @@
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 30px;
+    padding: 0 16px;
+    border-bottom: 1px solid #383838;
+}
+
+.port-selection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
