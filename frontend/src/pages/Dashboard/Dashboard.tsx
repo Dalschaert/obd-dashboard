@@ -23,14 +23,10 @@ function Dashboard() {
                 if (statusData.status === "Connected") {
                     await getVehicleData()
                     setBackendMessage(statusData.status);
-                } else {
-                    const statusError = await getVehicleData();
-                    setBackendMessage(statusError.error ?? statusData.status);
                 }
             } catch (error) {
                 console.error("Error fetching connection status:", error);
                 setConnectionStatus("Disconnected");
-                setBackendMessage("No OBD connection configured");
             }
         };
 
@@ -48,14 +44,13 @@ function Dashboard() {
             if (data.status === "Connected") {
                 await getVehicleData()
                 setBackendMessage(data.status);
-            } else {
-                const statusError = await getVehicleData();
-                setBackendMessage(statusError.error ?? data.status);
+            }
+            else if (data.status === "Disconnected") {
+                await getVehicleData()
             }
         } catch (error) {
             console.error("Error setting connection:", error);
             setConnectionStatus("Disconnected");
-            setBackendMessage("No OBD connection");
         }
     }
 
