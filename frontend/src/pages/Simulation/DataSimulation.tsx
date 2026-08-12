@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import type { VehicleData } from "../../types/vehicle";
 import { getVehicleSimulation } from "../../services/api";
-import StandardInfoCard from "../../components/StandardInfoCard";
+import GeneralObdDashboard from "../../components/GeneralObdDashboard";
 import "./DataSimulation.css";
-import GraphInfoCard from "../../components/GraphInfoCard";
-import PercentageInfoCard from "../../components/PercentageInfoCard";
 
 
 function DataSimulation() {
@@ -34,22 +32,7 @@ function DataSimulation() {
         return <p>Loading...</p>;
     }
 
-
-    const allEntries = Object.entries(vehicleData).filter(([, value]) => value !== null && value !== undefined);
-    const displayEntries = allEntries.filter(([key]) => key !== "speed" && key !== "rpm" && key !== "engineLoad");
-
-    return (
-        <div className="data-simulation-container">
-            <div className="info-card-grid-container">
-                <GraphInfoCard VehicleData={{ title: "Speed", value: vehicleData.speed }} />
-                <GraphInfoCard VehicleData={{ title: "RPM", value: vehicleData.rpm }} />
-                <PercentageInfoCard VehicleData={{ title: "Engine load", value: vehicleData.engineLoad }} />
-                {displayEntries.map(([key, value]) => (
-                    <StandardInfoCard key={key} VehicleData={{ title: key, value }} />
-                ))}
-            </div>
-        </div>
-    );
+    return <GeneralObdDashboard vehicleData={vehicleData} />;
 }
 
 export default DataSimulation;

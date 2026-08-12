@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { getAvailablePorts, getConnectionStatus, getVehicleData, setConnection } from "../../services/api";
+import DashboardHeader from "./DashboardHeader";
 import "./Dashboard.css";
+import GeneralObdDashboard from "../../components/GeneralObdDashboard";
+import type { VehicleData } from "../../types/vehicle";
 
 function Dashboard() {
     const [ports, setPorts] = useState<string[]>([]);
     const [dashboardSelectedPort, setDashboardSelectedPort] = useState("");
     const [connectionStatus, setConnectionStatus] = useState("Disconnected");
-    const [backendMessage, setBackendMessage] = useState<string>("");
+    const [vehicleData, setVehicleData] = useState<VehicleData | null>(null);
 
     useEffect(() => {
         const loadInitialData = async () => {
@@ -21,8 +24,8 @@ function Dashboard() {
                 const statusData = await getConnectionStatus();
                 setConnectionStatus(statusData.status);
                 if (statusData.status === "Connected") {
-                    await getVehicleData()
-                    setBackendMessage(statusData.status);
+                    const vehicleData = await getVehicleData();
+                    setVehicleData(vehicleData);
                 }
             } catch (error) {
                 console.error("Error fetching connection status:", error);
@@ -42,11 +45,12 @@ function Dashboard() {
             const data = await setConnection(dashboardSelectedPort);
             setConnectionStatus(data.status);
             if (data.status === "Connected") {
-                await getVehicleData()
-                setBackendMessage(data.status);
+                const vehicleData = await getVehicleData();
+                setVehicleData(vehicleData);
             }
             else if (data.status === "Disconnected") {
-                await getVehicleData()
+                const vehicleData = await getVehicleData();
+                setVehicleData(vehicleData);
             }
         } catch (error) {
             console.error("Error setting connection:", error);
@@ -56,29 +60,18 @@ function Dashboard() {
 
     return (
         <>
-            <header className="dashboard-header">
-                <div className="port-selection">
-                    <p>Ports:</p>
-                    <select
-                        value={dashboardSelectedPort}
-                        onChange={(event) => setDashboardSelectedPort(event.target.value)}
-                    >
-                        <option value="">Select a port</option>
-                        {ports.map((port: string) => (
-                            <option key={port} value={port}>
-                                {port}
-                            </option>
-                        ))}
-                    </select>
-                    <button onClick={handleConnect} disabled={!dashboardSelectedPort}>
-                        Connect
-                    </button>
-                </div>
-                <p>Connection Status: {connectionStatus}</p>
-            </header>
-            <div>
-                <p>{backendMessage}</p>
-            </div>
+            <DashboardHeader
+                ports={ports}
+                dashboardSelectedPort={dashboardSelectedPort}
+                setDashboardSelectedPort={setDashboardSelectedPort}
+                handleConnect={handleConnect}
+                connectionStatus={connectionStatus}
+            />
+            {(!vehicleData) ? (
+                <p>Waiting for vehicle data...</p>
+            ) : (
+                <GeneralObdDashboard vehicleData={vehicleData} />
+            )}
         </>
     );
 }

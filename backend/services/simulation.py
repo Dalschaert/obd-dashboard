@@ -12,11 +12,13 @@ async def simulator_loop():
 
     speed = 50
     rpm = 2000
+    engine_run_time = 0
 
     while True:
 
         speed += random.uniform(-5, 5)
         rpm += random.uniform(-500, 500)
+        engine_run_time += 0.1
 
         current_vehicle_data = VehicleData(
             speed=round(speed, 1),
@@ -28,7 +30,7 @@ async def simulator_loop():
             maf=random.uniform(5, 20),
             controlModuleVoltage=random.uniform(13.8, 14.5),
             ambientTemperature=random.randint(15, 30),
-            timestamp=time.time(),
+            engineRunTime=engine_run_time,
         )
 
         if current_vehicle_data.speed < 0 or current_vehicle_data.speed > 200:
