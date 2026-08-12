@@ -21,6 +21,7 @@ function Dashboard() {
                 const statusData = await getConnectionStatus();
                 setConnectionStatus(statusData.status);
                 if (statusData.status === "Connected") {
+                    await getVehicleData()
                     setBackendMessage(statusData.status);
                 } else {
                     const statusError = await getVehicleData();
@@ -45,6 +46,7 @@ function Dashboard() {
             const data = await setConnection(dashboardSelectedPort);
             setConnectionStatus(data.status);
             if (data.status === "Connected") {
+                await getVehicleData()
                 setBackendMessage(data.status);
             } else {
                 const statusError = await getVehicleData();
