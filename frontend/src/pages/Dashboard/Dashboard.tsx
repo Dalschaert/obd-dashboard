@@ -11,6 +11,7 @@ function Dashboard() {
     const [connectionStatus, setConnectionStatus] = useState("Disconnected");
     const [vehicleData, setVehicleData] = useState<VehicleData | null>(null);
 
+    // Ports + connection status ophalen bij het laden van de pagina
     useEffect(() => {
         const loadInitialData = async () => {
             try {
@@ -35,6 +36,24 @@ function Dashboard() {
 
         loadInitialData();
     }, []);
+
+    // Continu vehicle data ophalen
+    useEffect(() => {
+        if (dashboardSelectedPort === "" || connectionStatus !== "Connected") {
+            return;
+        }
+
+        const interval = setInterval(async () => {
+            try {
+                const data = await getVehicleData();
+                setVehicleData(data);
+            } catch (error) {
+                console.error("Error fetching vehicle data:", error);
+            }
+        }, 2000);
+
+        return () => clearInterval(interval);
+    }, [connectionStatus, dashboardSelectedPort]);
 
     async function handleConnect() {
         if (!dashboardSelectedPort) {

@@ -5,10 +5,13 @@ import PercentageInfoCard from "./PercentageInfoCard";
 import "./InfoCard.css";
 
 interface GeneralObdDashboardProps {
-    vehicleData: VehicleData;
+    vehicleData: VehicleData | string;
 }
 
 function GeneralObdDashboard({ vehicleData }: GeneralObdDashboardProps) {
+     if (typeof vehicleData === "string") {
+        return <div>{vehicleData}</div>;
+    }
     const allEntries = Object.entries(vehicleData).filter(([, value]) => value !== null && value !== undefined);
     const displayEntries = allEntries.filter(([key]) => key !== "speed" && key !== "rpm" && key !== "engineLoad");
 
