@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 import asyncio
 
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -42,6 +42,37 @@ def get_vehicle_simulation():
 @app.get("/api/vehicle-data")
 def get_vehicle_data():
     return get_dashboard_data()
+
+@app.websocket("/ws/vehicle-data")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+
+    try:
+        while True:
+            try:
+                vehicle_data = get_dashboard_data()
+
+                if isinstance(vehicle_data, VehicleData):
+                    await websocket.send_json(
+                        vehicle_data.model_dump()
+                    )
+
+                elif isinstance(vehicle_data, str):
+                    await websocket.send_json({
+                        "error": vehicle_data
+                    })
+
+            except Exception as e:
+                print("Error getting vehicle data:", e)
+
+                await websocket.send_json({
+                    "error": str(e)
+                })
+
+            await asyncio.sleep(1)
+
+    except WebSocketDisconnect:
+        print("Client disconnected")
 
 
 @app.get("/api/ports")

@@ -1,3 +1,5 @@
+import type { VehicleData } from "../types/vehicle";
+
 export async function getVehicleSimulation() {
     const response = await fetch("http://localhost:8000/api/vehicle-simulation");
 
@@ -16,6 +18,34 @@ export async function getVehicleData() {
     }
 
     return response.json();
+}
+
+export function getVehicleDataWebSocket(
+    onData: (data: VehicleData | string) => void,
+    onError: (error: Event) => void,
+) {
+    const ws = new WebSocket("ws://localhost:8000/ws/vehicle-data");
+
+    ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+
+        if (data.error) {
+            onData(data.error);
+            return;
+    }
+
+    onData(data);
+    };
+
+    ws.onerror = (event) => {
+        onError(event);
+    };
+
+    ws.onclose = () => {
+        console.log("WebSocket connection closed");
+    };
+
+    return ws;
 }
 
 export async function getAvailablePorts() {

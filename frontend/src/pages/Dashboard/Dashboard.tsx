@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { getAvailablePorts, getConnectionStatus, getVehicleData, setConnection } from "../../services/api";
+import {
+    getAvailablePorts,
+    getConnectionStatus,
+    getVehicleData,
+    setConnection,
+    getVehicleDataWebSocket
+} from "../../services/api";
+
 import DashboardHeader from "./DashboardHeader";
 import "./Dashboard.css";
 import GeneralObdDashboard from "../../components/GeneralObdDashboard";
@@ -9,9 +16,12 @@ function Dashboard() {
     const [ports, setPorts] = useState<string[]>([]);
     const [dashboardSelectedPort, setDashboardSelectedPort] = useState("");
     const [connectionStatus, setConnectionStatus] = useState("Disconnected");
-    const [vehicleData, setVehicleData] = useState<VehicleData | null>(null);
+    const [vehicleData, setVehicleData] = useState<VehicleData | string | null>(null);
 
-    // Ports + connection status ophalen bij het laden van de pagina
+    const [dataMethod, setDataMethod] =
+        useState<"rest" | "websocket">("rest");
+
+    // Initial data
     useEffect(() => {
         const loadInitialData = async () => {
             try {
@@ -24,10 +34,6 @@ function Dashboard() {
             try {
                 const statusData = await getConnectionStatus();
                 setConnectionStatus(statusData.status);
-                if (statusData.status === "Connected") {
-                    const vehicleData = await getVehicleData();
-                    setVehicleData(vehicleData);
-                }
             } catch (error) {
                 console.error("Error fetching connection status:", error);
                 setConnectionStatus("Disconnected");
@@ -37,9 +43,13 @@ function Dashboard() {
         loadInitialData();
     }, []);
 
-    // Continu vehicle data ophalen
+    // REST
     useEffect(() => {
-        if (dashboardSelectedPort === "" || connectionStatus !== "Connected") {
+        if (
+            dataMethod !== "rest" ||
+            dashboardSelectedPort === "" ||
+            connectionStatus !== "Connected"
+        ) {
             return;
         }
 
@@ -50,10 +60,34 @@ function Dashboard() {
             } catch (error) {
                 console.error("Error fetching vehicle data:", error);
             }
-        }, 2000);
+        }, 5000);
 
         return () => clearInterval(interval);
-    }, [connectionStatus, dashboardSelectedPort]);
+    }, [dataMethod, connectionStatus, dashboardSelectedPort]);
+
+    // WebSocket
+    useEffect(() => {
+        if (
+            dataMethod !== "websocket" ||
+            dashboardSelectedPort === "" || 
+            connectionStatus !== "Connected"
+        ) {
+            return;
+        }
+
+        const socket = getVehicleDataWebSocket(
+            (data) => {
+                setVehicleData(data);
+            },
+            (error) => {
+                console.error("WebSocket error:", error);
+            }
+        );
+
+        return () => {
+            socket.close();
+        };
+    }, [dataMethod, connectionStatus, dashboardSelectedPort]);
 
     async function handleConnect() {
         if (!dashboardSelectedPort) {
@@ -62,18 +96,16 @@ function Dashboard() {
 
         try {
             const data = await setConnection(dashboardSelectedPort);
+
             setConnectionStatus(data.status);
-            if (data.status === "Connected") {
-                const vehicleData = await getVehicleData();
-                setVehicleData(vehicleData);
-            }
-            else if (data.status === "Disconnected") {
-                const vehicleData = await getVehicleData();
-                setVehicleData(vehicleData);
+
+            if (data.status !== "Connected") {
+                setVehicleData(null);
             }
         } catch (error) {
             console.error("Error setting connection:", error);
             setConnectionStatus("Disconnected");
+            setVehicleData(null);
         }
     }
 
@@ -86,7 +118,20 @@ function Dashboard() {
                 handleConnect={handleConnect}
                 connectionStatus={connectionStatus}
             />
-            {(!vehicleData) ? (
+
+            <select
+                value={dataMethod}
+                onChange={(e) =>
+                    setDataMethod(
+                        e.target.value as "rest" | "websocket"
+                    )
+                }
+            >
+                <option value="rest">REST API</option>
+                <option value="websocket">WebSocket</option>
+            </select>
+
+            {!vehicleData ? (
                 <p>Waiting for vehicle data...</p>
             ) : (
                 <GeneralObdDashboard vehicleData={vehicleData} />
