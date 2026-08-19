@@ -69,7 +69,7 @@ async def websocket_endpoint(websocket: WebSocket):
                     "error": str(e)
                 })
 
-            await asyncio.sleep(1)
+            await asyncio.sleep(.1)
 
     except WebSocketDisconnect:
         print("Client disconnected")
