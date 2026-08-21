@@ -21,12 +21,13 @@ export async function getVehicleData() {
 }
 
 export function getVehicleDataWebSocket(
-    onData: (data: VehicleData | string) => void,
+    onData: (data: VehicleData | string, latency?: number) => void,
     onError: (error: Event) => void,
 ) {
     const ws = new WebSocket("ws://localhost:8000/ws/vehicle-data");
 
     ws.onmessage = (event) => {
+        const receivedAt = Date.now()
         const data = JSON.parse(event.data);
 
         if (data.error) {
@@ -34,7 +35,9 @@ export function getVehicleDataWebSocket(
             return;
     }
 
-    onData(data);
+    const latency = data.sentAt !== undefined ? receivedAt - data.sentAt : undefined;
+
+    onData(data, latency);
     };
 
     ws.onerror = (event) => {

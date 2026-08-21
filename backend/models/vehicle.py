@@ -13,7 +13,6 @@ class VehicleData(BaseModel):
     maf: float
     controlModuleVoltage: float
     ambientTemperature: float
-    engineRunTime: float
 
     # Optionele gegevens (niet elke auto ondersteunt deze)
     throttlePosition: Optional[float] = None
@@ -28,5 +27,5 @@ class VehicleData(BaseModel):
 
     distanceSinceDtcClear: Optional[float] = None
 
-    # Metadata
-    timestamp: Optional[float] = None
+    # Metadata voor performantiemeting
+    sentAt: Optional[float] = None

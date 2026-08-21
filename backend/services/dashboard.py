@@ -25,9 +25,8 @@ def vehicle_data_dashboard(connection):
     intake_temp = connection.query(obd.commands.INTAKE_TEMP)
     maf = connection.query(obd.commands.MAF)
     ambient_temp = connection.query(obd.commands.AMBIANT_AIR_TEMP)
-    engine_run_time = random.randint(0, 10000)
 
-    return VehicleData(
+    vehicleDataModel = VehicleData(
         rpm=rpm.value.magnitude if not rpm.is_null() else 0.0,
         speed=speed.value.magnitude if not speed.is_null() else 0.0,
         engineLoad=engine_load.value.magnitude if not engine_load.is_null() else 0.0,
@@ -45,7 +44,6 @@ def vehicle_data_dashboard(connection):
         ambientTemperature=(
             ambient_temp.value.magnitude if not ambient_temp.is_null() else 0.0
         ),
-        engineRunTime=(
-            engine_run_time
-        ),
     )
+    vehicleDataModel.sentAt = time.time() * 1000
+    return vehicleDataModel
