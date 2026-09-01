@@ -1,0 +1,203 @@
+.info-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    min-height: 150px;
+    padding: 22px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+
+    background:
+        linear-gradient(145deg,
+            rgba(255, 255, 255, 0.055),
+            rgba(255, 255, 255, 0.02));
+
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.15);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-3px);
+
+    border-color: rgba(255, 255, 255, 0.15);
+
+    background:
+        linear-gradient(145deg,
+            rgba(255, 255, 255, 0.075),
+            rgba(255, 255, 255, 0.025));
+}
+
+
+/* CARD TITLE */
+
+.info-card p {
+    position: static;
+
+    margin: 0 0 12px;
+
+    color: rgba(255, 255, 255, 0.48);
+
+    font-size: 12px;
+    font-weight: 600;
+
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    transform: none;
+    background: none;
+}
+
+
+/* VALUE */
+
+.info-card h1 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: clamp(28px, 3vw, 42px);
+    font-weight: 600;
+
+    letter-spacing: -1.5px;
+}
+
+
+/* STANDARD CARD */
+
+.standard-info-card {
+    justify-content: space-between;
+
+    min-height: 120px;
+}
+
+
+/* GRAPH CARDS */
+
+.graph-info-card {
+    grid-column: span 2;
+    grid-row: span 2;
+
+    min-height: 300px;
+}
+
+.graph-info-card h1 {
+    margin-bottom: 6px;
+
+    font-size: 48px;
+}
+
+
+/* GRAPH */
+
+.graph-chart {
+    width: 100%;
+    height: 210px;
+
+    margin-top: 14px;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+
+/* PERCENTAGE CARD */
+
+.percentage-info-card {
+    grid-row: span 2;
+
+    min-height: 300px;
+
+    justify-content: space-between;
+    align-items: flex-start;
+
+    padding-top: 22px;
+}
+
+.percentage-info-card p {
+    margin: 0;
+
+    position: static;
+
+    background: none;
+    transform: none;
+}
+
+
+/* PERCENTAGE RING */
+
+.percentage-ring {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 150px;
+    height: 150px;
+
+    align-self: center;
+
+    margin: auto 0;
+}
+
+.percentage-ring-svg {
+    width: 150px;
+    height: 150px;
+
+    transform: rotate(-90deg);
+}
+
+.percentage-ring-track,
+.percentage-ring-progress {
+    fill: none;
+
+    stroke-width: 8;
+}
+
+.percentage-ring-track {
+    stroke: rgba(255, 255, 255, 0.08);
+}
+
+.percentage-ring-progress {
+    stroke: #d64747;
+
+    stroke-linecap: round;
+
+    transition: stroke-dashoffset 0.3s ease;
+}
+
+.percentage-ring__value {
+    position: absolute;
+
+    color: #ffffff;
+
+    font-size: 24px;
+    font-weight: 600;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+    .graph-info-card {
+        grid-column: span 1;
+    }
+
+    .percentage-info-card {
+        grid-row: span 1;
+
+        min-height: 220px;
+    }
+}

@@ -112,3 +112,29 @@ export async function setConnection(port: string) {
 
     return response.json();
 }
+
+export async function getSimulationMode() {
+    const response = await fetch("http://localhost:8000/api/simulation-mode");
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch simulation mode");
+    }
+
+    return response.json();
+}
+
+export async function setSimulationMode(mode: string) {
+    const response = await fetch("http://localhost:8000/api/simulation-mode", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ mode }),
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to set simulation mode");
+    }
+
+    return response.json();
+}
